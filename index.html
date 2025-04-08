@@ -239,41 +239,64 @@
     }
 
     async function guardarRespuestas() {
-      // Validación de nombre de invitado si está como "asiste"
-      const tarjetas = document.querySelectorAll('.invitado-card');
-      for (const tarjeta of tarjetas) {
-        const nombreLabel = tarjeta.querySelector('strong').innerText;
-        const botones = tarjeta.querySelectorAll('button.seleccionado');
-        const input = tarjeta.querySelector('input');
+  const tarjetas = document.querySelectorAll('.invitado-card');
+  let todoRespondido = true;
 
-        if (nombreLabel === "Invitado") {
-          if (input && input.value.trim() === "" && botones[0]?.textContent.includes("✅")) {
-            alert("Por favor escribe el nombre del invitado.");
-            return;
-          }
-        }
-      }
+  for (const tarjeta of tarjetas) {
+    const nombreLabel = tarjeta.querySelector('strong').innerText;
+    const botonesSeleccionados = tarjeta.querySelectorAll('button.seleccionado');
+    const input = tarjeta.querySelector('input');
 
-      try {
-        await db.collection("confirmaciones").doc(personaActual).set(respuestas);
-        document.getElementById('confirmacion').classList.add('hidden');
-        const mensaje = document.getElementById('mensaje');
-        mensaje.classList.remove('hidden');
-
-        let resumenHTML = "<p>¡Gracias por confirmar! 💌</p><ul style='text-align:left; list-style:none; padding:0;'>";
-        Object.entries(respuestas).forEach(([nombre, estado]) => {
-          const simbolo = estado === 'asiste' ? "✔️" : "❌";
-          const texto = estado === 'asiste' ? "Asiste" : "No asiste";
-          resumenHTML += `<li>${simbolo} <strong>${nombre}</strong>: ${texto}</li>`;
-        });
-        resumenHTML += "</ul>";
-        mensaje.innerHTML = resumenHTML;
-
-      } catch (error) {
-        console.error("Error guardando en Firebase:", error);
-        alert("Error al guardar. Intenta de nuevo.");
-      }
+    if (botonesSeleccionados.length === 0) {
+      todoRespondido = false;
+      break;
     }
+
+    const respuesta = botonesSeleccionados[0].textContent.includes("✅") ? "asiste" : "no_asiste";
+
+    if (nombreLabel === "Invitado") {
+      if (respuesta === "asiste") {
+        const nombreInvitado = input?.value.trim();
+        if (!nombreInvitado) {
+          alert("Por favor escribe el nombre del invitado.");
+          input.focus();
+          return;
+        }
+        respuestas[nombreInvitado] = respuesta;
+      } else {
+        respuestas["Invitado"] = respuesta;
+      }
+    } else {
+      respuestas[nombreLabel] = respuesta;
+    }
+  }
+
+  if (!todoRespondido) {
+    alert("Por favor responde para todos los invitados antes de confirmar.");
+    return;
+  }
+
+  try {
+    await db.collection("confirmaciones").doc(personaActual).set(respuestas);
+    document.getElementById('confirmacion').classList.add('hidden');
+    const mensaje = document.getElementById('mensaje');
+    mensaje.classList.remove('hidden');
+
+    let resumenHTML = "<p>¡Gracias por confirmar! 💌</p><ul style='text-align:left; list-style:none; padding:0;'>";
+    Object.entries(respuestas).forEach(([nombre, estado]) => {
+      const simbolo = estado === 'asiste' ? "✔️" : "❌";
+      const texto = estado === 'asiste' ? "Asiste" : "No asiste";
+      resumenHTML += `<li>${simbolo} <strong>${nombre}</strong>: ${texto}</li>`;
+    });
+    resumenHTML += "</ul>";
+    mensaje.innerHTML = resumenHTML;
+
+  } catch (error) {
+    console.error("Error guardando en Firebase:", error);
+    alert("Error al guardar. Intenta de nuevo.");
+  }
+}
+
   </script>
 </body>
 </html>
