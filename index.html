@@ -196,19 +196,23 @@
 
   <script>
     // Inicializar Firebase con compat
-  const firebaseConfig = {
-    apiKey: "AIzaSyDxtrOEH7k2Bkya9agHXzspX3YTpD2yqBc",
-    authDomain: "confirmacion-57754.firebaseapp.com",
-    projectId: "confirmacion-57754",
-    storageBucket: "confirmacion-57754.firebasestorage.app",
-    messagingSenderId: "465112720281",
-    appId: "1:465112720281:web:5897ae12ec918350502908",
-    measurementId: "G-FYLD55EFK2"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyDxtrOEH7k2Bkya9agHXzspX3YTpD2yqBc",
+  authDomain: "confirmacion-57754.firebaseapp.com",
+  projectId: "confirmacion-57754",
+  storageBucket: "confirmacion-57754.firebasestorage.app",
+  messagingSenderId: "465112720281",
+  appId: "1:465112720281:web:5897ae12ec918350502908",
+  measurementId: "G-FYLD55EFK2"
+};
 
-  // Inicializa Firebase y Firestore
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+// Inicializa Firebase y Firestore
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+const confirmacionRef = db.collection("confirmaciones").doc(personaActual);
+console.log("Referencia de Firestore:", confirmacionRef);
+
 
     // Lista de invitados por persona
     const invitadosPorPersona = {
@@ -267,29 +271,34 @@
     }
 
     async function guardarRespuestas() {
-      try {
-        const confirmacionRef = db.collection("confirmaciones").doc(personaActual);
-        console.log("Enviando a Firebase:", personaActual, respuestas);
+  console.log("Guardando respuestas en Firebase:", respuestas);
 
-        await confirmacionRef.set(respuestas);
+  try {
+    const confirmacionRef = db.collection("confirmaciones").doc(personaActual);
+    console.log("Guardando en Firestore:", confirmacionRef); // Verifica que esta referencia sea correcta
+    await confirmacionRef.set(respuestas);
 
-        document.getElementById('confirmacion').classList.add('hidden');
-        const mensaje = document.getElementById('mensaje');
-        mensaje.classList.remove('hidden');
+    document.getElementById('confirmacion').classList.add('hidden');
+    const mensaje = document.getElementById('mensaje');
+    mensaje.classList.remove('hidden');
 
-        let resumenHTML = "<p>¡Gracias por confirmar! 💌</p><ul style='text-align:left; list-style:none; padding:0;'>";
-        Object.entries(respuestas).forEach(([nombre, estado]) => {
-          const simbolo = estado === 'asiste' ? "✔️" : "❌";
-          const texto = estado === 'asiste' ? "Asiste" : "No asiste";
-          resumenHTML += `<li>${simbolo} <strong>${nombre}</strong>: ${texto}</li>`;
-        });
-        resumenHTML += "</ul>";
-        mensaje.innerHTML = resumenHTML;
-      } catch (error) {
-        console.error("Error guardando en Firebase:", error);
-        alert("Hubo un error al guardar tu confirmación. Intenta de nuevo más tarde.");
-      }
-    }
+    let resumenHTML = "<p>¡Gracias por confirmar! 💌</p><ul style='text-align:left; list-style:none; padding:0;'>";
+    Object.entries(respuestas).forEach(([nombre, estado]) => {
+      const simbolo = estado === 'asiste' ? "✔️" : "❌";
+      const texto = estado === 'asiste' ? "Asiste" : "No asiste";
+      resumenHTML += `<li>${simbolo} <strong>${nombre}</strong>: ${texto}</li>`;
+    });
+    resumenHTML += "</ul>";
+
+    mensaje.innerHTML = resumenHTML;
+
+  } catch (error) {
+    console.error("Error guardando en Firebase:", error);
+    alert("Hubo un error al guardar tu confirmación. Intenta de nuevo más tarde.");
+  }
+}
+
+
 
     // Cuenta regresiva (opcional)
     const fechaObjetivo = new Date("2025-07-05T00:00:00");
