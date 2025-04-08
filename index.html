@@ -195,19 +195,20 @@
   </div>
 
   <script>
-    // Configuración y conexión con Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyDxtrOEH7k2Bkya9agHXzspX3YTpD2yqBc",
-      authDomain: "confirmacion-57754.firebaseapp.com",
-      projectId: "confirmacion-57754",
-      storageBucket: "confirmacion-57754.appspot.com",
-      messagingSenderId: "465112720281",
-      appId: "1:465112720281:web:5897ae12ec918350502908",
-      measurementId: "G-FYLD55EFK2"
-    };
+    // Inicializar Firebase con compat
+  const firebaseConfig = {
+    apiKey: "AIzaSyDxtrOEH7k2Bkya9agHXzspX3YTpD2yqBc",
+    authDomain: "confirmacion-57754.firebaseapp.com",
+    projectId: "confirmacion-57754",
+    storageBucket: "confirmacion-57754.firebasestorage.app",
+    messagingSenderId: "465112720281",
+    appId: "1:465112720281:web:5897ae12ec918350502908",
+    measurementId: "G-FYLD55EFK2"
+  };
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+  // Inicializa Firebase y Firestore
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
 
     // Lista de invitados por persona
     const invitadosPorPersona = {
