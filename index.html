@@ -6,11 +6,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins&display=swap" rel="stylesheet">
   <style>
     body {
-      margin: 0;
-      padding: 0;
       font-family: 'Poppins', sans-serif;
       background: #fff4f7;
       color: #333;
+      margin: 0;
+      padding: 0;
     }
 
     .container {
@@ -29,11 +29,6 @@
       font-size: 2.5em;
       margin: 0;
       color: #c85a8b;
-    }
-
-    header p {
-      margin: 5px 0;
-      font-size: 1.2em;
     }
 
     .hidden {
@@ -65,11 +60,6 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       padding: 20px;
       margin-bottom: 15px;
-      transition: 0.3s ease;
-    }
-
-    .invitado-card:hover {
-      transform: translateY(-2px);
     }
 
     .botones button {
@@ -95,6 +85,14 @@
       border-color: #333;
     }
 
+    .input-invitado {
+      margin-top: 10px;
+      padding: 8px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
     #confirmarBtn {
       margin-top: 20px;
       background-color: #c85a8b;
@@ -114,56 +112,19 @@
       margin-top: 30px;
     }
 
-    .seleccionado.asiste-btn {
-      border: 3px solid #0f5132;
-      background-color: #bce3cb;
-    }
-
-    .seleccionado.no-asiste-btn {
-      border: 3px solid #842029;
-      background-color: #f3b4be;
-    }
-
     .invitado-card.respondido {
       background-color: #fff0f5;
       border: 2px dashed #c85a8b;
     }
 
     @media (max-width: 600px) {
-      #login input {
+      #login input, #login button, #confirmarBtn {
         width: 100%;
         margin-bottom: 10px;
-      }
-
-      #login button {
-        width: 100%;
-      }
-
-      .botones {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .botones button {
-        width: 100%;
-        margin: 5px 0;
-      }
-
-      header h1 {
-        font-size: 2em;
-      }
-
-      header p {
-        font-size: 1em;
-      }
-
-      #confirmarBtn {
-        width: 100%;
       }
     }
   </style>
 
-  <!-- Firebase App (core) y Firestore -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
@@ -175,13 +136,9 @@
       <p>Confirmación de Asistencia</p>
     </header>
 
-    <div id="contador" style="text-align: center; background-color: #c85a8b; color: white; padding: 10px; font-size: 1.2em; font-weight: bold;">
-      Quedan <span id="diasRestantes"></span> días para confirmar tu asistencia.
-    </div>
-
     <div id="login">
       <p>Ingresa tu nombre para confirmar:</p>
-      <input type="text" id="nombreInput" placeholder="Ej. Pepe Torres">
+      <input type="text" id="nombreInput" placeholder="Ej. Aimar Morales">
       <button onclick="buscarInvitado()">Buscar</button>
     </div>
 
@@ -195,30 +152,27 @@
   </div>
 
   <script>
-    // Inicializar Firebase con compat
     const firebaseConfig = {
       apiKey: "AIzaSyDxtrOEH7k2Bkya9agHXzspX3YTpD2yqBc",
       authDomain: "confirmacion-57754.firebaseapp.com",
       projectId: "confirmacion-57754",
-      storageBucket: "confirmacion-57754.firebasestorage.app",
+      storageBucket: "confirmacion-57754.appspot.com",
       messagingSenderId: "465112720281",
-      appId: "1:465112720281:web:5897ae12ec918350502908",
-      measurementId: "G-FYLD55EFK2"
+      appId: "1:465112720281:web:5897ae12ec918350502908"
     };
 
-    // Inicializa Firebase y Firestore
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Lista de invitados por persona
     const invitadosPorPersona = {
-      "Pepe Torres": ["Pepe Torres", "Ana López", "Carlos Pérez"],
-      "Lucía Ramírez": ["Lucía Ramírez", "María Ramírez"],
-      "Aimar Morales": ["Invitado"]
+      "Pepe Torres": ["Pepe Torres", "Ana López"],
+      "Aimar Morales": ["Aimar Morales", "Invitado"],
+      "Lucía Ramírez": ["Lucía Ramírez", "María Ramírez"]
     };
 
-    let personaActual = "";
     let respuestas = {};
+    let personaActual = "";
+    let nombreDelInvitado = "";
 
     function buscarInvitado() {
       const nombre = document.getElementById('nombreInput').value.trim();
@@ -228,7 +182,7 @@
         document.getElementById('login').classList.add('hidden');
         document.getElementById('confirmacion').classList.remove('hidden');
       } else {
-        alert("Nombre no encontrado. Asegúrate de escribirlo igual que en la invitación.");
+        alert("Nombre no encontrado.");
       }
     }
 
@@ -240,43 +194,25 @@
       lista.forEach(nombre => {
         const div = document.createElement('div');
         div.className = 'invitado-card';
-        
+        let contenido = `<strong>${nombre}</strong><div class="botones">`;
+
+        contenido += `
+          <button class="asiste-btn" onclick="responder(this, '${nombre}', 'asiste')">Asiste</button>
+          <button class="no-asiste-btn" onclick="responder(this, '${nombre}', 'no_asiste')">No asiste</button>
+        </div>`;
+
         if (nombre === "Invitado") {
-          div.innerHTML = `
-            <strong>${nombre}</strong>
-            <div>
-              <label for="nombreInvitado">Ingresa el nombre del invitado:</label>
-              <input type="text" id="nombreInvitado" placeholder="Nombre del invitado" oninput="guardarNombreInvitado()">
-            </div>
-            <div class="botones">
-              <button class="asiste-btn" onclick="responder(this, '${nombre}', 'asiste')">Asiste</button>
-              <button class="no-asiste-btn" onclick="responder(this, '${nombre}', 'no_asiste')">No asiste</button>
-            </div>
-          `;
-        } else {
-          div.innerHTML = `
-            <strong>${nombre}</strong>
-            <div class="botones">
-              <button class="asiste-btn" onclick="responder(this, '${nombre}', 'asiste')">Asiste</button>
-              <button class="no-asiste-btn" onclick="responder(this, '${nombre}', 'no_asiste')">No asiste</button>
-            </div>
-          `;
+          contenido += `<input type="text" class="input-invitado" placeholder="Nombre del invitado">`;
         }
+
+        div.innerHTML = contenido;
         contenedor.appendChild(div);
       });
     }
 
-    function guardarNombreInvitado() {
-      const nombreInvitado = document.getElementById("nombreInvitado").value.trim();
-      if (nombreInvitado) {
-        respuestas["Invitado"] = nombreInvitado;
-      }
-    }
-
     function responder(boton, nombre, respuesta) {
-      respuestas[nombre] = respuesta;
-
-      const botones = boton.parentElement.querySelectorAll('button');
+      const tarjeta = boton.closest('.invitado-card');
+      const botones = tarjeta.querySelectorAll('button');
       botones.forEach(btn => {
         btn.classList.remove('seleccionado');
         btn.textContent = btn.textContent.replace(" ✅", "").replace(" ❌", "");
@@ -284,26 +220,46 @@
 
       boton.classList.add('seleccionado');
       boton.textContent += respuesta === 'asiste' ? " ✅" : " ❌";
-
-      const tarjeta = boton.closest('.invitado-card');
       tarjeta.classList.add('respondido');
+
+      if (nombre === "Invitado") {
+        const input = tarjeta.querySelector('input');
+        const nuevoNombre = input?.value.trim();
+        if (respuesta === 'asiste' && nuevoNombre !== "") {
+          respuestas[nuevoNombre] = respuesta;
+        } else if (respuesta === 'asiste' && nuevoNombre === "") {
+          alert("Por favor ingresa el nombre del invitado.");
+          delete respuestas[nuevoNombre];
+        } else {
+          respuestas["Invitado"] = respuesta;
+        }
+      } else {
+        respuestas[nombre] = respuesta;
+      }
     }
 
-    // Guardar respuestas en Firebase
     async function guardarRespuestas() {
-      console.log("Guardando respuestas en Firebase:", respuestas);
+      // Validación de nombre de invitado si está como "asiste"
+      const tarjetas = document.querySelectorAll('.invitado-card');
+      for (const tarjeta of tarjetas) {
+        const nombreLabel = tarjeta.querySelector('strong').innerText;
+        const botones = tarjeta.querySelectorAll('button.seleccionado');
+        const input = tarjeta.querySelector('input');
+
+        if (nombreLabel === "Invitado") {
+          if (input && input.value.trim() === "" && botones[0]?.textContent.includes("✅")) {
+            alert("Por favor escribe el nombre del invitado.");
+            return;
+          }
+        }
+      }
 
       try {
-        // Guardar las respuestas en Firestore
-        const confirmacionRef = db.collection("confirmaciones").doc(personaActual);
-        await confirmacionRef.set(respuestas);
-
-        // Mostrar mensaje de confirmación
+        await db.collection("confirmaciones").doc(personaActual).set(respuestas);
         document.getElementById('confirmacion').classList.add('hidden');
         const mensaje = document.getElementById('mensaje');
         mensaje.classList.remove('hidden');
 
-        // Crear resumen de las respuestas
         let resumenHTML = "<p>¡Gracias por confirmar! 💌</p><ul style='text-align:left; list-style:none; padding:0;'>";
         Object.entries(respuestas).forEach(([nombre, estado]) => {
           const simbolo = estado === 'asiste' ? "✔️" : "❌";
@@ -311,23 +267,13 @@
           resumenHTML += `<li>${simbolo} <strong>${nombre}</strong>: ${texto}</li>`;
         });
         resumenHTML += "</ul>";
-
-        // Mostrar el resumen
         mensaje.innerHTML = resumenHTML;
 
       } catch (error) {
         console.error("Error guardando en Firebase:", error);
-        alert("Hubo un error al guardar tu confirmación. Intenta de nuevo más tarde.");
+        alert("Error al guardar. Intenta de nuevo.");
       }
     }
-
-    // Cuenta regresiva
-    const fechaObjetivo = new Date("2025-07-05T00:00:00");
-    const hoy = new Date();
-    const diferencia = fechaObjetivo - hoy;
-    const diasRestantes = Math.ceil(diferencia / (1000 * 60 * 60 * 24));
-    document.getElementById("diasRestantes").textContent = diasRestantes;
   </script>
 </body>
 </html>
-//nuevo
