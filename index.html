@@ -270,18 +270,24 @@ console.log("Referencia de Firestore:", confirmacionRef);
       tarjeta.classList.add('respondido');
     }
 
-    async function guardarRespuestas() {
-  console.log("Guardando respuestas en Firebase:", respuestas);
+    // Definir la función para guardar las respuestas
+async function guardarRespuestas() {
+  console.log("Guardando respuestas en Firebase:", respuestas); // Ver las respuestas antes de enviarlas
 
   try {
+    // Referencia a la colección y documento específico en Firestore
     const confirmacionRef = db.collection("confirmaciones").doc(personaActual);
-    console.log("Guardando en Firestore:", confirmacionRef); // Verifica que esta referencia sea correcta
+    console.log("Guardando en Firestore:", confirmacionRef); // Ver la referencia de Firestore
+
+    // Guardar las respuestas en Firestore
     await confirmacionRef.set(respuestas);
 
+    // Mostrar mensaje de confirmación
     document.getElementById('confirmacion').classList.add('hidden');
     const mensaje = document.getElementById('mensaje');
     mensaje.classList.remove('hidden');
 
+    // Crear resumen de las respuestas
     let resumenHTML = "<p>¡Gracias por confirmar! 💌</p><ul style='text-align:left; list-style:none; padding:0;'>";
     Object.entries(respuestas).forEach(([nombre, estado]) => {
       const simbolo = estado === 'asiste' ? "✔️" : "❌";
@@ -290,13 +296,15 @@ console.log("Referencia de Firestore:", confirmacionRef);
     });
     resumenHTML += "</ul>";
 
+    // Mostrar el resumen
     mensaje.innerHTML = resumenHTML;
 
   } catch (error) {
-    console.error("Error guardando en Firebase:", error);
+    console.error("Error guardando en Firebase:", error); // Capturar errores
     alert("Hubo un error al guardar tu confirmación. Intenta de nuevo más tarde.");
   }
 }
+
 
 
 
