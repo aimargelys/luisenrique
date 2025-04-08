@@ -210,17 +210,14 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    let personaActual = "";
-    let respuestas = {};
-
-    // Referencia a Firestore
-    const confirmacionRef = db.collection("confirmaciones").doc(personaActual);
-
     // Lista de invitados por persona
     const invitadosPorPersona = {
       "Pepe Torres": ["Pepe Torres", "Ana López", "Carlos Pérez"],
       "Lucía Ramírez": ["Lucía Ramírez", "María Ramírez"]
     };
+
+    let personaActual = "";
+    let respuestas = {};
 
     function buscarInvitado() {
       const nombre = document.getElementById('nombreInput').value.trim();
@@ -275,6 +272,7 @@
 
       try {
         // Guardar las respuestas en Firestore
+        const confirmacionRef = db.collection("confirmaciones").doc(personaActual);
         await confirmacionRef.set(respuestas);
 
         // Mostrar mensaje de confirmación
