@@ -1,40 +1,39 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Confirmación de Asistencia</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins&display=swap" rel="stylesheet">
   <style>
     body {
+      margin: 0;
+      padding: 0;
       font-family: 'Poppins', sans-serif;
       background: #fff4f7;
       color: #333;
-      margin: 0;
-      padding: 0;
     }
-
     .container {
       max-width: 800px;
       margin: auto;
       padding: 30px;
     }
-
     header {
       text-align: center;
       padding: 20px 0;
     }
-
     header h1 {
       font-family: 'Playfair Display', serif;
       font-size: 2.5em;
       margin: 0;
       color: #c85a8b;
     }
-
+    header p {
+      margin: 5px 0;
+      font-size: 1.2em;
+    }
     .hidden {
       display: none;
     }
-
     #login input {
       padding: 10px;
       width: 60%;
@@ -43,7 +42,6 @@
       border: 1px solid #ccc;
       border-radius: 8px;
     }
-
     #login button {
       padding: 10px 20px;
       background-color: #f4a9c0;
@@ -53,15 +51,17 @@
       cursor: pointer;
       font-weight: bold;
     }
-
     .invitado-card {
       background: white;
       border-radius: 12px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       padding: 20px;
       margin-bottom: 15px;
+      transition: 0.3s ease;
     }
-
+    .invitado-card:hover {
+      transform: translateY(-2px);
+    }
     .botones button {
       margin: 5px;
       padding: 10px 15px;
@@ -70,29 +70,17 @@
       cursor: pointer;
       font-weight: bold;
     }
-
     .asiste-btn {
       background-color: #d1e7dd;
       color: #0f5132;
     }
-
     .no-asiste-btn {
       background-color: #f8d7da;
       color: #842029;
     }
-
     .seleccionado {
       border-color: #333;
     }
-
-    .input-invitado {
-      margin-top: 10px;
-      padding: 8px;
-      width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
     #confirmarBtn {
       margin-top: 20px;
       background-color: #c85a8b;
@@ -103,7 +91,6 @@
       font-size: 1em;
       cursor: pointer;
     }
-
     #mensaje {
       text-align: center;
       font-size: 1.2em;
@@ -111,20 +98,56 @@
       font-weight: bold;
       margin-top: 30px;
     }
-
+    .seleccionado.asiste-btn {
+      border: 3px solid #0f5132;
+      background-color: #bce3cb;
+    }
+    .seleccionado.no-asiste-btn {
+      border: 3px solid #842029;
+      background-color: #f3b4be;
+    }
     .invitado-card.respondido {
       background-color: #fff0f5;
       border: 2px dashed #c85a8b;
     }
-
+    .input-invitado {
+      margin-top: 10px;
+      display: block;
+      padding: 8px;
+      border-radius: 6px;
+      width: 100%;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
     @media (max-width: 600px) {
-      #login input, #login button, #confirmarBtn {
+      #login input {
         width: 100%;
         margin-bottom: 10px;
+      }
+      #login button {
+        width: 100%;
+      }
+      .botones {
+        display: flex;
+        flex-direction: column;
+      }
+      .botones button {
+        width: 100%;
+        margin: 5px 0;
+      }
+      header h1 {
+        font-size: 2em;
+      }
+      header p {
+        font-size: 1em;
+      }
+      #confirmarBtn {
+        width: 100%;
       }
     }
   </style>
 
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
@@ -136,9 +159,13 @@
       <p>Confirmación de Asistencia</p>
     </header>
 
+    <div id="contador" style="text-align: center; background-color: #c85a8b; color: white; padding: 10px; font-size: 1.2em; font-weight: bold;">
+      Quedan <span id="diasRestantes"></span> días para confirmar tu asistencia.
+    </div>
+
     <div id="login">
       <p>Ingresa tu nombre para confirmar:</p>
-      <input type="text" id="nombreInput" placeholder="Ej. Aimar Morales">
+      <input type="text" id="nombreInput" placeholder="Ej. Pepe Torres" />
       <button onclick="buscarInvitado()">Buscar</button>
     </div>
 
@@ -158,21 +185,20 @@
       projectId: "confirmacion-57754",
       storageBucket: "confirmacion-57754.appspot.com",
       messagingSenderId: "465112720281",
-      appId: "1:465112720281:web:5897ae12ec918350502908"
+      appId: "1:465112720281:web:5897ae12ec918350502908",
+      measurementId: "G-FYLD55EFK2"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
     const invitadosPorPersona = {
-      "Pepe Torres": ["Pepe Torres", "Ana López"],
-      "Aimar Morales": ["Aimar Morales", "Invitado"],
-      "Lucía Ramírez": ["Lucía Ramírez", "María Ramírez"]
+      "Pepe Torres": ["Pepe Torres", "Ana López", "Carlos Pérez"],
+      "Lucía Ramírez": ["Lucía Ramírez", "María Ramírez"],
+      "Aimar Morales": ["Aimar Morales", "Invitado"]
     };
 
     let respuestas = {};
     let personaActual = "";
-    let nombreDelInvitado = "";
 
     function buscarInvitado() {
       const nombre = document.getElementById('nombreInput').value.trim();
@@ -182,7 +208,7 @@
         document.getElementById('login').classList.add('hidden');
         document.getElementById('confirmacion').classList.remove('hidden');
       } else {
-        alert("Nombre no encontrado.");
+        alert("Nombre no encontrado. Asegúrate de escribirlo igual que en la invitación.");
       }
     }
 
@@ -194,25 +220,48 @@
       lista.forEach(nombre => {
         const div = document.createElement('div');
         div.className = 'invitado-card';
-        let contenido = `<strong>${nombre}</strong><div class="botones">`;
 
-        contenido += `
-          <button class="asiste-btn" onclick="responder(this, '${nombre}', 'asiste')">Asiste</button>
-          <button class="no-asiste-btn" onclick="responder(this, '${nombre}', 'no_asiste')">No asiste</button>
-        </div>`;
-
+        let inputHTML = "";
+        let displayName = nombre;
         if (nombre === "Invitado") {
-          contenido += `<input type="text" class="input-invitado" placeholder="Nombre del invitado">`;
+          displayName = "Nombre del invitado";
+          inputHTML = `<input class="input-invitado" placeholder="Escribe el nombre del invitado" oninput="actualizarNombreInvitado(this)" />`;
         }
 
-        div.innerHTML = contenido;
+        div.innerHTML = `
+          <strong>${displayName}</strong>
+          ${inputHTML}
+          <div class="botones">
+            <button class="asiste-btn" onclick="responder(this, '${nombre}', 'asiste')">Asiste</button>
+            <button class="no-asiste-btn" onclick="responder(this, '${nombre}', 'no_asiste')">No asiste</button>
+          </div>
+        `;
         contenedor.appendChild(div);
       });
     }
 
+    function actualizarNombreInvitado(input) {
+      const tarjeta = input.closest(".invitado-card");
+      tarjeta.dataset.nombreReal = input.value.trim();
+    }
+
     function responder(boton, nombre, respuesta) {
-      const tarjeta = boton.closest('.invitado-card');
-      const botones = tarjeta.querySelectorAll('button');
+      const tarjeta = boton.closest(".invitado-card");
+      let nombreReal = nombre;
+
+      // Si es un invitado anónimo, obtener el nombre real del input
+      if (nombre === "Invitado") {
+        const input = tarjeta.querySelector("input");
+        nombreReal = input.value.trim();
+        if (!nombreReal) {
+          alert("Por favor, escribe el nombre del invitado antes de confirmar.");
+          return;
+        }
+      }
+
+      respuestas[nombreReal] = respuesta;
+
+      const botones = boton.parentElement.querySelectorAll('button');
       botones.forEach(btn => {
         btn.classList.remove('seleccionado');
         btn.textContent = btn.textContent.replace(" ✅", "").replace(" ❌", "");
@@ -220,83 +269,43 @@
 
       boton.classList.add('seleccionado');
       boton.textContent += respuesta === 'asiste' ? " ✅" : " ❌";
-      tarjeta.classList.add('respondido');
 
-      if (nombre === "Invitado") {
-        const input = tarjeta.querySelector('input');
-        const nuevoNombre = input?.value.trim();
-        if (respuesta === 'asiste' && nuevoNombre !== "") {
-          respuestas[nuevoNombre] = respuesta;
-        } else if (respuesta === 'asiste' && nuevoNombre === "") {
-          alert("Por favor ingresa el nombre del invitado.");
-          delete respuestas[nuevoNombre];
-        } else {
-          respuestas["Invitado"] = respuesta;
-        }
-      } else {
-        respuestas[nombre] = respuesta;
-      }
+      tarjeta.classList.add('respondido');
     }
 
     async function guardarRespuestas() {
-  const tarjetas = document.querySelectorAll('.invitado-card');
-  let todoRespondido = true;
-
-  for (const tarjeta of tarjetas) {
-    const nombreLabel = tarjeta.querySelector('strong').innerText;
-    const botonesSeleccionados = tarjeta.querySelectorAll('button.seleccionado');
-    const input = tarjeta.querySelector('input');
-
-    if (botonesSeleccionados.length === 0) {
-      todoRespondido = false;
-      break;
-    }
-
-    const respuesta = botonesSeleccionados[0].textContent.includes("✅") ? "asiste" : "no_asiste";
-
-    if (nombreLabel === "Invitado") {
-      if (respuesta === "asiste") {
-        const nombreInvitado = input?.value.trim();
-        if (!nombreInvitado) {
-          alert("Por favor escribe el nombre del invitado.");
-          input.focus();
+      try {
+        if (Object.keys(respuestas).length === 0) {
+          alert("Debes confirmar al menos una asistencia.");
           return;
         }
-        respuestas[nombreInvitado] = respuesta;
-      } else {
-        respuestas["Invitado"] = respuesta;
+
+        await db.collection("confirmaciones").doc(personaActual).set(respuestas);
+
+        document.getElementById('confirmacion').classList.add('hidden');
+        const mensaje = document.getElementById('mensaje');
+        mensaje.classList.remove('hidden');
+
+        let resumenHTML = "<p>¡Gracias por confirmar! 💌</p><ul style='text-align:left; list-style:none; padding:0;'>";
+        Object.entries(respuestas).forEach(([nombre, estado]) => {
+          const simbolo = estado === 'asiste' ? "✔️" : "❌";
+          const texto = estado === 'asiste' ? "Asiste" : "No asiste";
+          resumenHTML += `<li>${simbolo} <strong>${nombre}</strong>: ${texto}</li>`;
+        });
+        resumenHTML += "</ul>";
+
+        mensaje.innerHTML = resumenHTML;
+      } catch (error) {
+        console.error("Error guardando en Firebase:", error);
+        alert("Hubo un error al guardar tu confirmación. Intenta de nuevo más tarde.");
       }
-    } else {
-      respuestas[nombreLabel] = respuesta;
     }
-  }
 
-  if (!todoRespondido) {
-    alert("Por favor responde para todos los invitados antes de confirmar.");
-    return;
-  }
-
-  try {
-    await db.collection("confirmaciones").doc(personaActual).set(respuestas);
-    document.getElementById('confirmacion').classList.add('hidden');
-    const mensaje = document.getElementById('mensaje');
-    mensaje.classList.remove('hidden');
-
-    let resumenHTML = "<p>¡Gracias por confirmar! 💌</p><ul style='text-align:left; list-style:none; padding:0;'>";
-    Object.entries(respuestas).forEach(([nombre, estado]) => {
-      const simbolo = estado === 'asiste' ? "✔️" : "❌";
-      const texto = estado === 'asiste' ? "Asiste" : "No asiste";
-      resumenHTML += `<li>${simbolo} <strong>${nombre}</strong>: ${texto}</li>`;
-    });
-    resumenHTML += "</ul>";
-    mensaje.innerHTML = resumenHTML;
-
-  } catch (error) {
-    console.error("Error guardando en Firebase:", error);
-    alert("Error al guardar. Intenta de nuevo.");
-  }
-}
-
+    const fechaObjetivo = new Date("2025-07-05T00:00:00");
+    const hoy = new Date();
+    const diferencia = fechaObjetivo - hoy;
+    const diasRestantes = Math.ceil(diferencia / (1000 * 60 * 60 * 24));
+    document.getElementById("diasRestantes").textContent = diasRestantes;
   </script>
 </body>
 </html>
