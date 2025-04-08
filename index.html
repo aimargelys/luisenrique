@@ -129,7 +129,48 @@
       border: 2px dashed #c85a8b;
     }
 
+    @media (max-width: 600px) {
+  #login input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  #login button {
+    width: 100%;
+  }
+
+  .botones {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .botones button {
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  header h1 {
+    font-size: 2em;
+  }
+
+  header p {
+    font-size: 1em;
+  }
+
+  #confirmarBtn {
+    width: 100%;
+  }
+}
+
+
   </style>
+
+  <!-- Firebase App (core) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<!-- Firebase Firestore -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+
 </head>
 <body>
   <div class="container">
@@ -157,6 +198,32 @@
 
     <div id="mensaje" class="hidden"></div>
   </div>
+
+
+  <script>
+    // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDxtrOEH7k2Bkya9agHXzspX3YTpD2yqBc",
+  authDomain: "confirmacion-57754.firebaseapp.com",
+  projectId: "confirmacion-57754",
+  storageBucket: "confirmacion-57754.firebasestorage.app",
+  messagingSenderId: "465112720281",
+  appId: "1:465112720281:web:5897ae12ec918350502908",
+  measurementId: "G-FYLD55EFK2"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+  </script>
+
 
   <script>
     // Lista de invitados por persona
@@ -216,46 +283,72 @@
       tarjeta.classList.add('respondido');
     }
 
-    function guardarRespuestas() {
-  localStorage.setItem(`confirmacion_${personaActual}`, JSON.stringify(respuestas));
+    async function guardarRespuestas() {
+  try {
+    const confirmacionRef = db.collection("confirmaciones").doc(personaActual);
+    await confirmacionRef.set(respuestas);
 
-  // Llamada a Google Apps Script para registrar la confirmación
-  const url = 'https://script.google.com/macros/s/AKfycbyk-My3QylZgxJq4bmDwrMZTLhu6jUGlh_dYyn7JhD6to83wE90hqsFPExMhceVbPce/exec';  // Reemplaza con la URL que obtuviste al publicar el script
+    document.getElementById('confirmacion').classList.add('hidden');
+    const mensaje = document.getElementById('mensaje');
+    mensaje.classList.remove('hidden');
 
-  // Enviar los datos de la respuesta a Google Sheets
-  for (const [nombre, asistencia] of Object.entries(respuestas)) {
-    fetch(url, {
-      method: 'POST',
-      body: new URLSearchParams({
-        nombre: nombre,
-        asistencia: asistencia
-      }),
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.result === 'success') {
-        console.log('Confirmación guardada correctamente');
-      }
-    })
-    .catch(error => console.error('Error al guardar en Google Sheets:', error));
+    // Crear resumen
+    let resumenHTML = "<p>¡Gracias por confirmar! 💌</p><ul style='text-align:left; list-style:none; padding:0;'>";
+    Object.entries(respuestas).forEach(([nombre, estado]) => {
+      const simbolo = estado === 'asiste' ? "✔️" : "❌";
+      const texto = estado === 'asiste' ? "Asiste" : "No asiste";
+      resumenHTML += `<li>${simbolo} <strong>${nombre}</strong>: ${texto}</li>`;
+    });
+    resumenHTML += "</ul>";
+
+    mensaje.innerHTML = resumenHTML;
+  } catch (error) {
+    console.error("Error guardando en Firebase:", error);
+    alert("Hubo un error al guardar tu confirmación. Intenta de nuevo más tarde.");
   }
-
-  document.getElementById('confirmacion').classList.add('hidden');
-  const mensaje = document.getElementById('mensaje');
-  mensaje.classList.remove('hidden');
-
-  // Crear resumen
-  let resumenHTML = "<p>¡Gracias por confirmar! 💌</p><ul style='text-align:left; list-style:none; padding:0;'>";
-  Object.entries(respuestas).forEach(([nombre, estado]) => {
-    const simbolo = estado === 'asiste' ? "✔️" : "❌";
-    const texto = estado === 'asiste' ? "Asiste" : "No asiste";
-    resumenHTML += `<li>${simbolo} <strong>${nombre}</strong>: ${texto}</li>`;
-  });
-  resumenHTML += "</ul>";
-
-  mensaje.innerHTML = resumenHTML;
 }
+
+
+//     function guardarRespuestas() {
+//   localStorage.setItem(`confirmacion_${personaActual}`, JSON.stringify(respuestas));
+
+//   // Llamada a Google Apps Script para registrar la confirmación
+//   const url = 'https://script.google.com/macros/s/AKfycbyk-My3QylZgxJq4bmDwrMZTLhu6jUGlh_dYyn7JhD6to83wE90hqsFPExMhceVbPce/exec';  // Reemplaza con la URL que obtuviste al publicar el script
+
+//   // Enviar los datos de la respuesta a Google Sheets
+//   for (const [nombre, asistencia] of Object.entries(respuestas)) {
+//     fetch(url, {
+//       method: 'POST',
+//       body: new URLSearchParams({
+//         nombre: nombre,
+//         asistencia: asistencia
+//       }),
+//       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//       if (data.result === 'success') {
+//         console.log('Confirmación guardada correctamente');
+//       }
+//     })
+//     .catch(error => console.error('Error al guardar en Google Sheets:', error));
+//   }
+
+//   document.getElementById('confirmacion').classList.add('hidden');
+//   const mensaje = document.getElementById('mensaje');
+//   mensaje.classList.remove('hidden');
+
+//   // Crear resumen
+//   let resumenHTML = "<p>¡Gracias por confirmar! 💌</p><ul style='text-align:left; list-style:none; padding:0;'>";
+//   Object.entries(respuestas).forEach(([nombre, estado]) => {
+//     const simbolo = estado === 'asiste' ? "✔️" : "❌";
+//     const texto = estado === 'asiste' ? "Asiste" : "No asiste";
+//     resumenHTML += `<li>${simbolo} <strong>${nombre}</strong>: ${texto}</li>`;
+//   });
+//   resumenHTML += "</ul>";
+
+//   mensaje.innerHTML = resumenHTML;
+// }
 
   </script>
 
