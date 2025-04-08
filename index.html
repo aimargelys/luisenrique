@@ -217,23 +217,46 @@
     }
 
     function guardarRespuestas() {
-      localStorage.setItem(`confirmacion_${personaActual}`, JSON.stringify(respuestas));
+  localStorage.setItem(`confirmacion_${personaActual}`, JSON.stringify(respuestas));
 
-      document.getElementById('confirmacion').classList.add('hidden');
-      const mensaje = document.getElementById('mensaje');
-      mensaje.classList.remove('hidden');
+  // Llamada a Google Apps Script para registrar la confirmación
+  const url = 'https://script.google.com/macros/s/AKfycbxgh2bfpHb7Nz5vBd26L6GAONzzX7ihpaBJxC9gEBKUYqNhCHsT2EbpwNRBkZCACaNV/exec';  // Reemplaza con la URL que obtuviste al publicar el script
 
-      let resumenHTML = "<p>¡Gracias por confirmar! 💌</p><ul style='text-align:left; list-style:none; padding:0;'>";
-      Object.entries(respuestas).forEach(([nombre, estado]) => {
-        const simbolo = estado === 'asiste' ? "✔️" : "❌";
-        const texto = estado === 'asiste' ? "Asiste" : "No asiste";
-        resumenHTML += `<li>${simbolo} <strong>${nombre}</strong>: ${texto}</li>`;
-      });
-      resumenHTML += "</ul>";
+  // Enviar los datos de la respuesta a Google Sheets
+  for (const [nombre, asistencia] of Object.entries(respuestas)) {
+    fetch(url, {
+      method: 'POST',
+      body: new URLSearchParams({
+        nombre: nombre,
+        asistencia: asistencia
+      }),
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.result === 'success') {
+        console.log('Confirmación guardada correctamente');
+      }
+    })
+    .catch(error => console.error('Error al guardar en Google Sheets:', error));
+  }
 
-      mensaje.innerHTML = resumenHTML;
-      console.log("Respuestas guardadas:", respuestas);
-    }
+  document.getElementById('confirmacion').classList.add('hidden');
+  const mensaje = document.getElementById('mensaje');
+  mensaje.classList.remove('hidden');
+
+  // Crear resumen
+  let resumenHTML = "<p>¡Gracias por confirmar! 💌</p><ul style='text-align:left; list-style:none; padding:0;'>";
+  Object.entries(respuestas).forEach(([nombre, estado]) => {
+    const simbolo = estado === 'asiste' ? "✔️" : "❌";
+    const texto = estado === 'asiste' ? "Asiste" : "No asiste";
+    resumenHTML += `<li>${simbolo} <strong>${nombre}</strong>: ${texto}</li>`;
+  });
+  resumenHTML += "</ul>";
+
+  mensaje.innerHTML = resumenHTML;
+}
+
   </script>
 
 </body>
