@@ -213,7 +213,8 @@
     // Lista de invitados por persona
     const invitadosPorPersona = {
       "Pepe Torres": ["Pepe Torres", "Ana López", "Carlos Pérez"],
-      "Lucía Ramírez": ["Lucía Ramírez", "María Ramírez"]
+      "Lucía Ramírez": ["Lucía Ramírez", "María Ramírez"],
+      "Aimar Morales": ["Invitado"]
     };
 
     let personaActual = "";
@@ -239,15 +240,37 @@
       lista.forEach(nombre => {
         const div = document.createElement('div');
         div.className = 'invitado-card';
-        div.innerHTML = `
-          <strong>${nombre}</strong>
-          <div class="botones">
-            <button class="asiste-btn" onclick="responder(this, '${nombre}', 'asiste')">Asiste</button>
-            <button class="no-asiste-btn" onclick="responder(this, '${nombre}', 'no_asiste')">No asiste</button>
-          </div>
-        `;
+        
+        if (nombre === "Invitado") {
+          div.innerHTML = `
+            <strong>${nombre}</strong>
+            <div>
+              <label for="nombreInvitado">Ingresa el nombre del invitado:</label>
+              <input type="text" id="nombreInvitado" placeholder="Nombre del invitado" oninput="guardarNombreInvitado()">
+            </div>
+            <div class="botones">
+              <button class="asiste-btn" onclick="responder(this, '${nombre}', 'asiste')">Asiste</button>
+              <button class="no-asiste-btn" onclick="responder(this, '${nombre}', 'no_asiste')">No asiste</button>
+            </div>
+          `;
+        } else {
+          div.innerHTML = `
+            <strong>${nombre}</strong>
+            <div class="botones">
+              <button class="asiste-btn" onclick="responder(this, '${nombre}', 'asiste')">Asiste</button>
+              <button class="no-asiste-btn" onclick="responder(this, '${nombre}', 'no_asiste')">No asiste</button>
+            </div>
+          `;
+        }
         contenedor.appendChild(div);
       });
+    }
+
+    function guardarNombreInvitado() {
+      const nombreInvitado = document.getElementById("nombreInvitado").value.trim();
+      if (nombreInvitado) {
+        respuestas["Invitado"] = nombreInvitado;
+      }
     }
 
     function responder(boton, nombre, respuesta) {
