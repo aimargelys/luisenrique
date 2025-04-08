@@ -196,32 +196,31 @@
 
   <script>
     // Inicializar Firebase con compat
-const firebaseConfig = {
-  apiKey: "AIzaSyDxtrOEH7k2Bkya9agHXzspX3YTpD2yqBc",
-  authDomain: "confirmacion-57754.firebaseapp.com",
-  projectId: "confirmacion-57754",
-  storageBucket: "confirmacion-57754.firebasestorage.app",
-  messagingSenderId: "465112720281",
-  appId: "1:465112720281:web:5897ae12ec918350502908",
-  measurementId: "G-FYLD55EFK2"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxtrOEH7k2Bkya9agHXzspX3YTpD2yqBc",
+      authDomain: "confirmacion-57754.firebaseapp.com",
+      projectId: "confirmacion-57754",
+      storageBucket: "confirmacion-57754.firebasestorage.app",
+      messagingSenderId: "465112720281",
+      appId: "1:465112720281:web:5897ae12ec918350502908",
+      measurementId: "G-FYLD55EFK2"
+    };
 
-// Inicializa Firebase y Firestore
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+    // Inicializa Firebase y Firestore
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-const confirmacionRef = db.collection("confirmaciones").doc(personaActual);
-console.log("Referencia de Firestore:", confirmacionRef);
+    let personaActual = "";
+    let respuestas = {};
 
+    // Referencia a Firestore
+    const confirmacionRef = db.collection("confirmaciones").doc(personaActual);
 
     // Lista de invitados por persona
     const invitadosPorPersona = {
       "Pepe Torres": ["Pepe Torres", "Ana López", "Carlos Pérez"],
       "Lucía Ramírez": ["Lucía Ramírez", "María Ramírez"]
     };
-
-    let respuestas = {};
-    let personaActual = "";
 
     function buscarInvitado() {
       const nombre = document.getElementById('nombreInput').value.trim();
@@ -270,45 +269,38 @@ console.log("Referencia de Firestore:", confirmacionRef);
       tarjeta.classList.add('respondido');
     }
 
-    // Definir la función para guardar las respuestas
-async function guardarRespuestas() {
-  console.log("Guardando respuestas en Firebase:", respuestas); // Ver las respuestas antes de enviarlas
+    // Guardar respuestas en Firebase
+    async function guardarRespuestas() {
+      console.log("Guardando respuestas en Firebase:", respuestas);
 
-  try {
-    // Referencia a la colección y documento específico en Firestore
-    const confirmacionRef = db.collection("confirmaciones").doc(personaActual);
-    console.log("Guardando en Firestore:", confirmacionRef); // Ver la referencia de Firestore
+      try {
+        // Guardar las respuestas en Firestore
+        await confirmacionRef.set(respuestas);
 
-    // Guardar las respuestas en Firestore
-    await confirmacionRef.set(respuestas);
+        // Mostrar mensaje de confirmación
+        document.getElementById('confirmacion').classList.add('hidden');
+        const mensaje = document.getElementById('mensaje');
+        mensaje.classList.remove('hidden');
 
-    // Mostrar mensaje de confirmación
-    document.getElementById('confirmacion').classList.add('hidden');
-    const mensaje = document.getElementById('mensaje');
-    mensaje.classList.remove('hidden');
+        // Crear resumen de las respuestas
+        let resumenHTML = "<p>¡Gracias por confirmar! 💌</p><ul style='text-align:left; list-style:none; padding:0;'>";
+        Object.entries(respuestas).forEach(([nombre, estado]) => {
+          const simbolo = estado === 'asiste' ? "✔️" : "❌";
+          const texto = estado === 'asiste' ? "Asiste" : "No asiste";
+          resumenHTML += `<li>${simbolo} <strong>${nombre}</strong>: ${texto}</li>`;
+        });
+        resumenHTML += "</ul>";
 
-    // Crear resumen de las respuestas
-    let resumenHTML = "<p>¡Gracias por confirmar! 💌</p><ul style='text-align:left; list-style:none; padding:0;'>";
-    Object.entries(respuestas).forEach(([nombre, estado]) => {
-      const simbolo = estado === 'asiste' ? "✔️" : "❌";
-      const texto = estado === 'asiste' ? "Asiste" : "No asiste";
-      resumenHTML += `<li>${simbolo} <strong>${nombre}</strong>: ${texto}</li>`;
-    });
-    resumenHTML += "</ul>";
+        // Mostrar el resumen
+        mensaje.innerHTML = resumenHTML;
 
-    // Mostrar el resumen
-    mensaje.innerHTML = resumenHTML;
+      } catch (error) {
+        console.error("Error guardando en Firebase:", error);
+        alert("Hubo un error al guardar tu confirmación. Intenta de nuevo más tarde.");
+      }
+    }
 
-  } catch (error) {
-    console.error("Error guardando en Firebase:", error); // Capturar errores
-    alert("Hubo un error al guardar tu confirmación. Intenta de nuevo más tarde.");
-  }
-}
-
-
-
-
-    // Cuenta regresiva (opcional)
+    // Cuenta regresiva
     const fechaObjetivo = new Date("2025-07-05T00:00:00");
     const hoy = new Date();
     const diferencia = fechaObjetivo - hoy;
