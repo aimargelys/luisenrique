@@ -132,7 +132,7 @@
     #confirmarBtn {
       width: 100%;
       padding: 18px;
-      font-size: 1.7em; /* Aumentado tamaño */
+      font-size: 3em; /* Aumentado tamaño */
       margin-top: 20px;
       background-color: #d84a8a;
       color: white;
@@ -244,16 +244,17 @@
     let personaActual = "";
 
     function buscarInvitado() {
-      const nombre = document.getElementById('nombreInput').value.trim();
-      if (invitadosPorPersona[nombre]) {
-        personaActual = nombre;
-        mostrarInvitados(invitadosPorPersona[nombre]);
-        document.getElementById('login').classList.add('hidden');
-        document.getElementById('confirmacion').classList.remove('hidden');
-      } else {
-        alert("Nombre no encontrado. Asegúrate de escribirlo igual que en la invitación.");
-      }
-    }
+  const nombre = document.getElementById('nombreInput').value.trim();
+  if (invitadosPorPersona[nombre]) {
+    personaActual = nombre;
+    mostrarInvitados(invitadosPorPersona[nombre]);
+    document.getElementById('login').classList.add('hidden');
+    document.getElementById('confirmacion').classList.remove('hidden');
+    document.getElementById('contador').classList.add('hidden'); // 👈 Aquí ocultamos el banner
+  } else {
+    alert("Nombre no encontrado. Asegúrate de escribirlo igual que en la invitación.");
+  }
+}
 
     function mostrarInvitados(lista) {
       const contenedor = document.getElementById('listaInvitados');
@@ -316,21 +317,40 @@
     }
 
     async function guardarRespuestas() {
-      try {
-        if (Object.keys(respuestas).length === 0) {
-          alert("Debes confirmar al menos una asistencia.");
-          return;
-        }
-        await db.collection("confirmaciones").doc(personaActual).set(respuestas);
-        document.getElementById('confirmacion').classList.add('hidden');
-        const mensaje = document.getElementById('mensaje');
-        mensaje.classList.remove('hidden');
-        mensaje.textContent = "¡Gracias por confirmar tu asistencia!";
-      } catch (error) {
-        console.error("Error al guardar respuestas:", error);
-        alert("Hubo un error al guardar la confirmación. Intenta de nuevo.");
-      }
+  try {
+    if (Object.keys(respuestas).length === 0) {
+      alert("Debes confirmar al menos una asistencia.");
+      return;
     }
+
+    await db.collection("confirmaciones").doc(personaActual).set(respuestas);
+
+    document.getElementById('confirmacion').classList.add('hidden');
+
+    // Generar el HTML del resumen
+    let resumenHTML = "<p>¡Gracias por confirmar! 💌</p><ul style='text-align:left; list-style:none; padding:0;'>";
+    Object.entries(respuestas).forEach(([nombre, estado]) => {
+      const simbolo = estado === 'asiste' ? "✔️" : "❌";
+      const texto = estado === 'asiste' ? "Asiste" : "No asiste";
+      resumenHTML += `<li>${simbolo} <strong>${nombre}</strong>: ${texto}</li>`;
+    });
+    resumenHTML += "</ul>";
+
+    // Mostrar el resumen
+    const mensaje = document.getElementById('mensaje');
+    mensaje.classList.remove('hidden');
+    mensaje.innerHTML = resumenHTML;
+
+    // Alternativamente o adicionalmente, usa un div separado
+    document.getElementById('resumen').classList.remove('hidden');
+    document.getElementById('resumen').innerHTML = resumenHTML;
+
+  } catch (error) {
+    console.error("Error al guardar respuestas:", error);
+    alert("Hubo un error al guardar la confirmación. Intenta de nuevo.");
+  }
+}
+
 
     function calcularDiasRestantes() {
       const hoy = new Date();
