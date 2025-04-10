@@ -11,228 +11,180 @@
       font-family: 'Poppins', sans-serif;
       background: #fff4f7;
       color: #333;
-      font-size: 20px;
+      font-size: 18px;
     }
-
     .container {
       max-width: 800px;
       margin: auto;
       padding: 30px;
     }
-
     header {
       text-align: center;
       padding: 20px 0;
     }
-
-    header h1 {
+    .nombre {
       font-family: 'Playfair Display', serif;
-      font-size: 4em;
-      line-height: 1.2;
+      font-size: 3.5em;
       margin: 0;
       color: #d84a8a;
+      line-height: 1.1;
     }
-
+    .ampersand {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5em;
+      margin: 0;
+      color: #d84a8a;
+      line-height: 1.1;
+    }
     header p {
-      margin: 5px 0;
-      font-size: 1.5em;
+      margin: 8px 0;
+      font-size: 1.4em;
     }
-
     .hidden {
       display: none;
     }
-
     #login {
       text-align: center;
-      margin-top: 20px;
+      margin-top: 30px;
     }
-
     #login p {
-      font-size: 1.3em;
+      font-size: 1.6em;
+      font-weight: 500;
+      margin-bottom: 15px;
     }
-
-    #login input,
-    #login button {
-      font-size: 1.5em;
-      padding: 14px;
-      border-radius: 10px;
-      margin: 10px 0;
-    }
-
     #login input {
-      width: 80%;
-      max-width: 400px;
-      display: block;
-      margin: 0 auto 15px auto;
+      padding: 16px;
+      width: 90%;
+      max-width: 500px;
+      font-size: 1.4em;
       border: 1px solid #ccc;
-    }
-
-    #login button {
-      width: 80%;
-      max-width: 400px;
+      border-radius: 12px;
+      margin-bottom: 15px;
       display: block;
-      margin: 0 auto;
-      background-color: #f88bac;
-      color: white;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
+      margin-left: auto;
+      margin-right: auto;
     }
-
+    #login button {
+      padding: 16px 24px;
+      background-color: #f88bac;
+      border: none;
+      color: white;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1.4em;
+      font-weight: bold;
+      width: 90%;
+      max-width: 500px;
+    }
     .invitado-card {
       background: white;
       border-radius: 12px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      padding: 30px;
+      padding: 25px;
       margin-bottom: 20px;
-      font-size: 1.4em;
+      font-size: 1.3em;
     }
-
-    .invitado-card strong {
-      font-size: 1.6em;
-      margin-bottom: 10px;
-      display: block;
+    .botones {
+      display: flex;
+      flex-direction: column;
+      margin-top: 15px;
     }
-
     .botones button {
       margin: 10px 0;
       padding: 14px;
       border-radius: 10px;
-      border: 2px solid transparent;
-      cursor: pointer;
+      font-size: 1.3em;
       font-weight: bold;
-      font-size: 1.5em;
-      width: 100%;
+      cursor: pointer;
+      border: 2px solid transparent;
     }
-
     .asiste-btn {
       background-color: #d1e7dd;
       color: #0f5132;
     }
-
     .no-asiste-btn {
       background-color: #f8d7da;
       color: #842029;
     }
-
     .seleccionado {
       border-color: #333;
     }
-
-    #confirmarBtn {
-      width: 100%;
-      margin-top: 20px;
-      background-color: #d84a8a;
-      color: white;
-      padding: 15px;
-      border: none;
-      border-radius: 10px;
-      font-size: 1.5em;
-      cursor: pointer;
-    }
-
-    #mensaje {
-      text-align: center;
-      font-size: 1.5em;
-      color: #d84a8a;
-      font-weight: bold;
-      margin-top: 30px;
-    }
-
     .seleccionado.asiste-btn {
       border: 3px solid #0f5132;
       background-color: #bce3cb;
     }
-
     .seleccionado.no-asiste-btn {
       border: 3px solid #842029;
       background-color: #f3b4be;
     }
-
     .invitado-card.respondido {
       background-color: #fff0f5;
       border: 2px dashed #c85a8b;
     }
-
     .input-invitado {
+      width: 100%;
+      font-size: 1.3em;
       margin-top: 10px;
-      display: block;
       padding: 12px;
       border-radius: 10px;
-      width: 100%;
       border: 1px solid #ccc;
-      font-size: 1.5em;
     }
-
+    #confirmarBtn {
+      width: 100%;
+      padding: 15px;
+      font-size: 1.5em;
+      margin-top: 20px;
+      background-color: #d84a8a;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    #mensaje {
+      text-align: center;
+      font-size: 1.4em;
+      color: #d84a8a;
+      font-weight: bold;
+      margin-top: 30px;
+    }
     #contador {
+      font-size: 1.3em;
       text-align: center;
       background-color: #c85a8b;
       color: white;
-      padding: 16px;
-      font-size: 1.5em;
+      padding: 12px;
       font-weight: bold;
+      border-radius: 10px;
+      margin-bottom: 20px;
     }
 
     @media (max-width: 600px) {
-      body {
-        font-size: 18px;
-        padding: 10px;
+      .nombre {
+        font-size: 2.4em;
       }
-
-      header h1 {
-        font-size: 2.5em;
+      .ampersand {
+        font-size: 1.8em;
       }
-
       header p {
         font-size: 1.2em;
       }
-
+      #login p {
+        font-size: 1.5em;
+      }
       #login input,
       #login button {
-        font-size: 1.2em;
-        padding: 12px;
-      }
-
-      .botones button {
-        font-size: 1.2em;
-        padding: 12px;
-      }
-
-      .input-invitado {
-        font-size: 1.2em;
-        padding: 10px;
-      }
-
-      .invitado-card {
-        font-size: 1.2em;
-        padding: 20px;
-      }
-
-      .invitado-card strong {
-        font-size: 1.3em;
-      }
-
-      #confirmarBtn {
-        font-size: 1.3em;
+        font-size: 1.4em;
         padding: 14px;
-      }
-
-      #mensaje,
-      #contador {
-        font-size: 1.3em;
-        padding: 12px;
       }
     }
   </style>
-
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>Aimar Gelys & Luis Enrique</h1>
+      <h1 class="nombre">Aimar Gelys</h1>
+      <h1 class="ampersand">&</h1>
+      <h1 class="nombre">Luis Enrique</h1>
       <p>5 de julio de 2025</p>
       <p>Confirmación de Asistencia</p>
     </header>
@@ -255,6 +207,10 @@
 
     <div id="mensaje" class="hidden"></div>
   </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
   <script>
     const firebaseConfig = {
@@ -347,38 +303,35 @@
       boton.classList.add('seleccionado');
       boton.textContent += respuesta === 'asiste' ? " ✅" : " ❌";
 
-      tarjeta.classList.add("respondido");
+      tarjeta.classList.add('respondido');
     }
 
-    function guardarRespuestas() {
-      if (Object.keys(respuestas).length === 0) {
-        alert("Por favor selecciona al menos una opción.");
-        return;
-      }
-
-      db.collection("confirmaciones").add({
-        persona: personaActual,
-        respuestas: respuestas,
-        timestamp: new Date()
-      }).then(() => {
+    async function guardarRespuestas() {
+      try {
+        if (Object.keys(respuestas).length === 0) {
+          alert("Debes confirmar al menos una asistencia.");
+          return;
+        }
+        await db.collection("confirmaciones").doc(personaActual).set(respuestas);
         document.getElementById('confirmacion').classList.add('hidden');
-        document.getElementById('mensaje').classList.remove('hidden');
-        document.getElementById('mensaje').textContent = "¡Gracias por confirmar! 💖";
-      }).catch(error => {
-        alert("Error al guardar la confirmación. Intenta nuevamente.");
-        console.error(error);
-      });
+        const mensaje = document.getElementById('mensaje');
+        mensaje.classList.remove('hidden');
+        mensaje.textContent = "¡Gracias por confirmar tu asistencia!";
+      } catch (error) {
+        console.error("Error al guardar respuestas:", error);
+        alert("Hubo un error al guardar la confirmación. Intenta de nuevo.");
+      }
     }
 
-    // Contador de días restantes
-    function actualizarContador() {
+    function calcularDiasRestantes() {
       const hoy = new Date();
-      const evento = new Date("2025-07-05");
-      const diferencia = Math.ceil((evento - hoy) / (1000 * 60 * 60 * 24));
-      document.getElementById("diasRestantes").textContent = diferencia;
+      const fechaLimite = new Date("2025-06-25");
+      const diff = fechaLimite - hoy;
+      const dias = Math.ceil(diff / (1000 * 60 * 60 * 24));
+      document.getElementById("diasRestantes").textContent = dias;
     }
 
-    actualizarContador();
+    window.onload = calcularDiasRestantes;
   </script>
 </body>
 </html>
