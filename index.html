@@ -323,11 +323,17 @@
       return;
     }
 
+    // 1. Guardar en Firestore
     await db.collection("confirmaciones").doc(personaActual).set(respuestas);
-
     document.getElementById('confirmacion').classList.add('hidden');
+  } catch (error) {
+    console.error("Error al guardar respuestas:", error);
+    alert("Hubo un error al guardar la confirmación. Intenta de nuevo.");
+    return; // Detiene la función si falló al guardar
+  }
 
-    // Generar el HTML del resumen
+  try {
+    // 2. Generar el resumen
     let resumenHTML = "<p>¡Gracias por confirmar! 💌</p><ul style='text-align:left; list-style:none; padding:0;'>";
     Object.entries(respuestas).forEach(([nombre, estado]) => {
       const simbolo = estado === 'asiste' ? "✔️" : "❌";
@@ -336,18 +342,19 @@
     });
     resumenHTML += "</ul>";
 
-    // Mostrar el resumen
+    // 3. Mostrar en pantalla
     const mensaje = document.getElementById('mensaje');
     mensaje.classList.remove('hidden');
     mensaje.innerHTML = resumenHTML;
 
-    // Alternativamente o adicionalmente, usa un div separado
-    document.getElementById('resumen').classList.remove('hidden');
-    document.getElementById('resumen').innerHTML = resumenHTML;
-
-  } catch (error) {
-    console.error("Error al guardar respuestas:", error);
-    alert("Hubo un error al guardar la confirmación. Intenta de nuevo.");
+    const resumenDiv = document.getElementById('resumen');
+    if (resumenDiv) {
+      resumenDiv.classList.remove('hidden');
+      resumenDiv.innerHTML = resumenHTML;
+    }
+  } catch (htmlError) {
+    console.error("Error al generar el resumen:", htmlError);
+    alert("Tu confirmación fue guardada, pero hubo un error al mostrar el resumen.");
   }
 }
 
