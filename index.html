@@ -9,7 +9,7 @@
       margin: 0;
       padding: 0;
       font-family: 'Poppins', sans-serif;
-      background: #fff4f7;
+      background: #fff4f6;
       color: #333;
       font-size: 17px;
     }
@@ -28,7 +28,7 @@
     .nombre, .ampersand {
       font-family: 'Playfair Display', serif;
       font-size: 4em;
-      color: #d84a8a;
+      color: #f88bac;
       margin: 0;
       line-height: 1.1;
     }
@@ -143,7 +143,7 @@
       padding: 14px;
       font-size: 1.4em;
       margin-top: 20px;
-      background-color: #d84a8a;
+      background-color: #f88bac;
       color: white;
       border: none;
       border-radius: 10px;
@@ -161,7 +161,7 @@
     #contador {
       font-size: 1.2em;
       text-align: center;
-      background-color: #c85a8b;
+      background-color: #f88bac;
       color: white;
       padding: 10px;
       font-weight: bold;
@@ -212,7 +212,6 @@
       <br>
       <p class="login">5 de julio de 2025</p>
       <p class="login">Confirmación de Asistencia</p>
-      <br>
     </header>
 
     <div id="contador">
@@ -222,8 +221,8 @@
     <div id="login">
       <p>Ingresa tu nombre para confirmar:</p>
       <br>
-      <input type="text" id="nombreInput" placeholder="Ej. Pepe Torres" />
-      <br>
+      <input type="text" id="nombreInput" placeholder="Ej. Aimar Morales" />
+      <br><br>
       <button onclick="buscarInvitado()">Buscar</button>
     </div>
 
@@ -254,9 +253,82 @@
     const db = firebase.firestore();
 
     const invitadosPorPersona = {
-      "Pepe Torres": ["Pepe Torres", "Ana López", "Carlos Pérez"],
-      "Lucía Ramírez": ["Lucía Ramírez", "María Ramírez"],
-      "Aimar Morales": ["Aimar Morales", "Invitado", "Invitado"]
+      "Maria Torres": ["Maria Torres", "Carlos López"],
+      "Gerardo Luis Morales": ["Gerardo Morales", "Jessica Ding"],
+      "Aimar Morales": ["Aimar Morales", "Invitado", "Invitado"],
+      "Luis Gabriel Morales": ["Luis Gabriel Morales"],
+      "Alice Lopez": ["Alice López", "Tito González"],
+      "Alejandra González": ["Alejandra González"],
+      "Matilde Rodriguez": ["Matilde Rodríguez"],
+      "Félix Torres": ["Félix Torres", "Lyenid Torres", "Félix Luis Torres"],
+      "Samálix Torres": ["Samálix Torres", "Johan Rivera"],
+      "Soharis Torres": ["Soharis Torres", "Jesús"],
+      "Luis Correa": ["Luis Correa"],
+      "Sedes Maldonado": ["Sedes Maldonado"],
+      "Gerardo Morales": ["Gerardo Morales", "Glenda Pagán", "Yadiel Morales", "Invitado", "Jeremy Morales"],
+      "Laura Morales": ["Laura Morales"],
+      "Priscilla Resto": ["Priscilla Resto", "Ricardo Resto"],
+      "Lidael Collazo": ["Lidael Collazo", "Elsie Reyes", "Eduardo López", "William Echevarría"],
+      "Brandon Concepción": ["Brandon Concepción"],
+      "Alexis Ocasio": ["Alexis Ocasio"],
+      "Gabriel Feliciano": ["Gabriel Feliciano"],
+      "Kenssy Marfisi": ["Kenssy Marfisi"],
+      "Willie Negrón": ["Willie Negrón"],
+      "Angel Alvarado": ["Angel Alvarado"],
+      "Erick Martínez": ["Erick Martínez"],
+      "Andrew Irizarry": ["Andrew Irizarry"],
+      "Jorge Muñiz": ["Jorge Muñiz"],
+      "Joseph Cruz": ["Joseph Cruz"],
+      "Noíma Martínez": ["Noíma Martínez", "Victoria Martínez"],
+      "Valeria Renta": ["Valeria Renta", "Astris Santiago", "Felix Renta", "Sebastian Renta"],
+      "Ileana Dardir": ["Ileana Dardir", "Sofia Dardir"],
+      "Mariví Santiago": ["Mariví Santiago", "Juan Galarza", "Angelli Galarza", "Gustavo Galarza", "Edwin Ramos"],
+      "Nydia Baerga": ["Nydia Baerga", "Nydia Mercado", "Frankie Baerga", "Nicolle Correa", "Maiah"],
+      "Tití Priscy": ["Tití Priscy"],
+      "Kerem Goldilla": ["Kerem Goldilla"],
+      "Sara Jarque": ["Sara Jarque", "René Dietrich"],
+      "Joaquín Jarque": ["Joaquín Jarque", "Invitado"],
+      "Rebeca Rodríguez": ["Rebeca", "Manuel"],
+      "Tío Gary": ["Tío Gary", "Nydia"],
+      "Nadia Torres": ["Nadia", "Fernanda", "Edir"],
+      "Edgardo Alexis Torres": ["Alexis", "Evelisa", "Jonathan", "Christian"],
+      "Edgardo José Torres": ["José", "Yelitza", "Sean", "Aidan"],
+      "Kevin Torres": ["Kevin", "Deborah", "Kerianne", "Invitado", "Kevin José"],
+      "José Torres": ["Joyto", "Mimi", "Isa"],
+      "Jason Torres":["Jason", "Juan"],
+      "Emmarie Torres": ["Emmarie", "Loriangelys", "Dereck", "Joanellys", "Invitado"],
+      "Alejandro Rivera": ["Alejandro", "Karima"],
+      "Mayda": ["Mayda"],
+      "Tití Luz": ["Tití Luz"],
+      "Jenney Torres": ["Jenney", "Carlitos"],
+      "Luis Morales": ["Luis Morales"],
+      "Olga Iris Soto": ["Olga Iris Soto"],
+      "Eddie Santiago": ["Eddie Santiago"],
+      "Nataniel Velez": ["Nataniel Velez", "Invitado"],
+      "Christian Torres": ["Christian Torres", "Invitado"],
+      "José López Acevedo": ["José", "Damaris", "Joyce", "Dimaris", "Invitado", "Invitado"],
+      "Norberto López": ["Norberto", "Abdiel", "Miozotys"],
+      "Lisandra López": ["Lisandra", "Daniella", "Gabriella", "Victoria"],
+      "Héctor López": ["Héctor", "Julia"],
+      "Miguel López": ["Miguel", "Mildred"],
+      "Gloria Soto": ["Gloria Soto"],
+      "Miriam López": ["Miriam", "Arnaldo", "Valentina", "Jiram"],
+      "Mickey López": ["Mickey López", "Invitado"],
+      "Luis Miguel López": ["Luis Miguel López", "María Rivera"],
+      "Sandra López": ["Sandra", "Luis Gabriel", "Invitado"],
+      "Catalina Acevedo": ["Catalina Acevedo"],
+      "Miriam": ["Miriam"],
+      "Katherin": ["Katherin"],
+      "Saúl Ruiz": ["Saúl Ruiz", "Rochy"],
+      "Carlos Pérez": ["Carlos Pérez", "Rosa León"],
+      "Rafael Baez": ["Rafael Baez", "Kaitlyn Nieves"],
+      "Edwin López": ["Edwin López"],
+      "Zaibeth Díaz": ["Zaibeth", "Josué", "Bethzaida"],
+      "Héctor Luis Ortega": ["Héctor Luis Ortega"],
+      "Eric De León": ["Eric De León", "Paola"],
+      "Gabriela Vélez": ["Gabriela Vélez"],
+
+
     };
 
     let respuestas = {};
@@ -271,7 +343,7 @@
     document.getElementById('confirmacion').classList.remove('hidden');
     document.getElementById('contador').classList.add('hidden'); // 👈 Aquí ocultamos el banner
   } else {
-    alert("Nombre no encontrado. Asegúrate de escribirlo igual que en la invitación.");
+    alert("Nombre no encontrado. Asegúrate de escribirlo igual que en el mensaje que fue enviado.");
   }
 }
 
@@ -380,7 +452,7 @@
 
     function calcularDiasRestantes() {
       const hoy = new Date();
-      const fechaLimite = new Date("2025-05-30");
+      const fechaLimite = new Date("2025-06-05");
       const diff = fechaLimite - hoy;
       const dias = Math.ceil(diff / (1000 * 60 * 60 * 24));
       document.getElementById("diasRestantes").textContent = dias;
