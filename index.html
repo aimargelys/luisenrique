@@ -331,7 +331,7 @@
         let displayName = nombre;
         if (nombre === "Invitado") {
           displayName = "Nombre del invitado";
-          inputHTML = <input class="input-invitado" placeholder="Escribe el nombre del invitado" oninput="actualizarNombreInvitado(this)" />;
+          inputHTML = `<input class="input-invitado" placeholder="Escribe el nombre del invitado" oninput="actualizarNombreInvitado(this)" />`;
         }
 
         div.innerHTML = `
