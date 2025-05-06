@@ -170,50 +170,73 @@
     }
 
     @media (max-width: 480px) {
+  /* Aumentar el tamaño de los nombres */
   .nombre, .ampersand {
-    font-size: 5em; /* Aumenta aún más el tamaño de los nombres */
+    font-size: 5em; /* Más grande para que se vea bien en móviles */
   }
 
   header p {
-    font-size: 1.5em; /* Aumenta ligeramente el tamaño de las fechas y texto */
+    font-size: 1.5em; /* Aumentar el tamaño del texto en el encabezado */
   }
 
+  /* Aumentar el tamaño de los textos en el formulario y botones */
   #login p,
   #login input,
   #login button,
   .botones button,
   .input-invitado,
   #confirmarBtn {
-    font-size: 1.5em; /* Aumenta el tamaño de los textos de formularios y botones */
+    font-size: 1.5em; /* Hacer más grandes los textos */
   }
 
-  #contador {
-    font-size: 1.5em; /* Aumenta el tamaño del contador */
+  /* Aumentar el tamaño de los botones */
+  #login button,
+  #confirmarBtn,
+  .botones button {
+    padding: 16px 24px;
+    font-size: 1.6em; /* Botones más grandes */
   }
 
+  /* Asegurarse de que el input también sea más grande */
+  #login input {
+    font-size: 1.6em; /* Aumentar el tamaño del texto en el input */
+    padding: 16px;
+    width: 100%;
+  }
+
+  /* Asegurar que el botón de "Buscar" también sea grande */
+  #login button {
+    font-size: 1.6em; /* Aumenta el tamaño del botón de búsqueda */
+    padding: 18px 24px;
+    width: 100%; /* Hacer que ocupe todo el ancho posible */
+  }
+
+  /* Aumentar el tamaño de los nombres de los invitados */
   .invitado-card {
-    font-size: 1.4em; /* Aumenta el tamaño del texto en las tarjetas de invitados */
+    font-size: 1.6em; /* Aumentar el tamaño de las tarjetas de invitados */
   }
 
   .invitado-card strong {
-    font-size: 1.6em; /* Aumenta el tamaño del nombre dentro de las tarjetas */
+    font-size: 1.8em; /* Aumentar el tamaño del nombre dentro de las tarjetas */
   }
 
-  /* Asegura que los botones se vean bien en pantallas pequeñas */
+  /* Asegurarse de que los botones en las tarjetas sean grandes */
   .botones button {
-    font-size: 1.5em;
+    font-size: 1.6em; /* Aumentar el tamaño de los botones */
+    padding: 18px 24px; /* Aumentar el espacio dentro del botón */
   }
 
-  #login input {
-    padding: 16px;
-    font-size: 1.6em; /* Aumenta el tamaño de los inputs */
+  #confirmarBtn {
+    padding: 16px 24px;
+    font-size: 1.8em; /* Aumentar el tamaño del botón de confirmación */
   }
 
-  #login button {
-    padding: 18px 24px;
-    font-size: 1.6em; /* Aumenta el tamaño de los botones */
+  /* Ajustar el tamaño del contador */
+  #contador {
+    font-size: 1.6em;
   }
 }
+
 
   </style>
 </head>
